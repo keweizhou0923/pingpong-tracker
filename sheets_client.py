@@ -1,4 +1,3 @@
-import json
 import os
 import gspread
 import pandas as pd
@@ -14,14 +13,13 @@ SCOPES = [
 
 @st.cache_resource
 def get_client():
-    # Try JSON file first, then fall back to secrets
     json_path = os.path.join(os.path.dirname(__file__), "credentials.json")
     if os.path.exists(json_path):
         creds = Credentials.from_service_account_file(json_path, scopes=SCOPES)
     else:
-        creds = Credentials.from_service_account_info(
-            st.secrets["gcp_service_account"], scopes=SCOPES
-        )
+        info = dict(st.secrets["gcp_service_account"])
+        info["private_key"] = info["private_key"].replace("\\n", "\n")
+        creds = Credentials.from_service_account_info(info, scopes=SCOPES)
     return gspread.authorize(creds)
 
 

@@ -1,4 +1,6 @@
 import os
+import base64
+import json
 import gspread
 import pandas as pd
 import streamlit as st
@@ -17,8 +19,8 @@ def get_client():
     if os.path.exists(json_path):
         creds = Credentials.from_service_account_file(json_path, scopes=SCOPES)
     else:
-        info = dict(st.secrets["gcp_service_account"])
-        info["private_key"] = info["private_key"].replace("\\n", "\n")
+        encoded = st.secrets["GOOGLE_CREDENTIALS"]
+        info = json.loads(base64.b64decode(encoded))
         creds = Credentials.from_service_account_info(info, scopes=SCOPES)
     return gspread.authorize(creds)
 

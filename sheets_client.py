@@ -15,7 +15,7 @@ SCOPES = [
 
 @st.cache_resource
 def get_client():
-    json_path = os.path.join(os.path.dirname(__file__), "credentials.json")
+    json_path = r'C:\Users\yucai\Documents\credentials.json'
     if os.path.exists(json_path):
         creds = Credentials.from_service_account_file(json_path, scopes=SCOPES)
     else:
